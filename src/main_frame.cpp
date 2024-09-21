@@ -7,14 +7,20 @@
 MainFrame::MainFrame() : wxFrame{nullptr, wxID_ANY, "Unlocker 403"} {
    CreateWidgets();
    ConfigureLayout();
+   CreateEventBinds();
 }
 
 void MainFrame::CreateWidgets() {
    dnsResult = std::vector<DnsResult>{};
    panel = new wxPanel{this, wxID_ANY};
    scrolledWindow = new wxScrolledWindow{panel, wxID_ANY};
-   testBtn = new wxButton{panel, wxID_ANY, "Speed Test", wxDefaultPosition, wxSize{-1, 30}};
-   copyBtn = new wxButton{panel, wxID_ANY, "Copy Best DNS", wxDefaultPosition, wxSize{-1, 30}};
+   testBtn = new wxButton{panel, wxID_ANY, "Speed Test"};
+   copyBtn = new wxButton{panel, wxID_ANY, "Copy Best DNS"};
+   gauge = new wxGauge{panel, wxID_ANY, 0};
+#ifdef _WIN32
+   testBtn->SetSizeHints(wxSize{-1, 30});
+   copyBtn->SetSizeHints(wxSize{-1, 30});
+#endif
 }
 
 void MainFrame::ConfigureLayout() {
@@ -24,6 +30,8 @@ void MainFrame::ConfigureLayout() {
    outerSizer->Add(innerSizer, wxSizerFlags{}.Expand().Proportion(1).Border(wxALL, 12));
    innerSizer->Add(scrolledWindow, wxSizerFlags{}.Expand().Proportion(1));
    innerSizer->AddSpacer(4);
+   innerSizer->Add(gauge, wxSizerFlags{}.Expand());
+   innerSizer->AddSpacer(6);
    innerSizer->Add(testBtn, wxSizerFlags{}.Expand());
    innerSizer->AddSpacer(4);
    innerSizer->Add(copyBtn, wxSizerFlags{}.Expand());
@@ -40,16 +48,39 @@ void MainFrame::ConfigureLayout() {
    fetchThread.detach();
 }
 
-void MainFrame::CreateEventBinds() {}
+
+void MainFrame::CreateEventBinds() {
+   testBtn->Bind(wxEVT_BUTTON, &MainFrame::OnTestBtnClick, this);
+}
+
+void MainFrame::OnTestBtnClick(wxCommandEvent &event) {
+   gauge->Show();
+   testBtn->Enable(false);
+   innerSizer->Layout();
+   std::thread fetchThread{&MainFrame::FetchDnsResult, this};
+   fetchThread.detach();
+}
 
 void MainFrame::FetchDnsResult() {
    dnsResult.clear();
-   std::string dnsList[]{"178.22.122.100", "78.157.42.100", "78.157.42.101"};
+   std::vector<std::string> dnsList{"178.22.122.100", "78.157.42.100", "78.157.42.101"};
 
-   for (std::string dnsItem : dnsList)
+   CallAfter([this, dnsList]() {
+      gauge->SetRange(dnsList.size());
+      gauge->SetValue(1);
+   });
+
+   for (std::string dnsItem : dnsList) {
       dnsResult.push_back(DownloadTest(dnsItem));
 
+      CallAfter([this]() {
+         int value = gauge->GetValue();
+         gauge->SetValue(value + 1);
+      });
+   }
+
    CallAfter([this]() {
+      gauge->Hide();
       scrolledSizer->Clear(true);
 
       for (DnsResult result : dnsResult) {
@@ -64,7 +95,7 @@ void MainFrame::FetchDnsResult() {
          scrolledSizer->Add(sizer, wxSizerFlags{}.Expand());
          scrolledSizer->AddSpacer(8);
       }
-      
+
       copyBtn->Show();
       testBtn->Enable();
       innerSizer->Layout();

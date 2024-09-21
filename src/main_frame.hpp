@@ -12,6 +12,8 @@ class MainFrame : public wxFrame {
    void CreateEventBinds();
    void ConfigureLayout();
 
+   void OnTestBtnClick(wxCommandEvent &event);
+   
    void FetchDnsResult();
 
    wxPanel *panel;
@@ -21,5 +23,6 @@ class MainFrame : public wxFrame {
    wxBoxSizer *outerSizer;
    wxBoxSizer *innerSizer;
    wxBoxSizer *scrolledSizer;
+   wxGauge *gauge;
    std::vector<DnsResult> dnsResult;
 };
