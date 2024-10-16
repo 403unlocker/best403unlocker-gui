@@ -3,6 +3,8 @@ project(request CXX)
 
 find_package(CURL REQUIRED)
 find_package(wxWidgets REQUIRED)
+find_package(tomlplusplus REQUIRED)
+
 file(GLOB SRC_FILES src/*.cpp src/**/*.cpp)
 
 if(MSVC)
@@ -17,4 +19,4 @@ else()
   add_executable(${PROJECT_NAME} ${SRC_FILES})
 endif()
 
-target_link_libraries(${PROJECT_NAME} CURL::libcurl wxWidgets::wxWidgets)
+target_link_libraries(${PROJECT_NAME} CURL::libcurl wxWidgets::wxWidgets tomlplusplus::tomlplusplus)
