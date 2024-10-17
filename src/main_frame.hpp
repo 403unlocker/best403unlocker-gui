@@ -1,5 +1,8 @@
-#pragma once
+#ifndef BEST403UNLOCKER_SRC_MAINFRAME_HPP
+#define BEST403UNLOCKER_SRC_MAINFRAME_HPP
+
 #include "downloads.hpp"
+#include <thread>
 #include <vector>
 #include <wx/wx.h>
 
@@ -13,7 +16,7 @@ class MainFrame : public wxFrame {
    void ConfigureLayout();
 
    void OnTestBtnClick(wxCommandEvent &event);
-   
+
    void FetchDnsResult();
 
    wxPanel *panel;
@@ -25,4 +28,7 @@ class MainFrame : public wxFrame {
    wxBoxSizer *scrolledSizer;
    wxGauge *gauge;
    std::vector<DnsResult> dnsResult;
+   std::thread *fetchThread;
 };
+
+#endif

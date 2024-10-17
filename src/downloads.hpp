@@ -1,4 +1,6 @@
-#pragma once
+#ifndef BEST403UNLOCKER_SRC_DOWNLOADS_HPP
+#define BEST403UNLOCKER_SRC_DOWNLOADS_HPP
+
 #include <string>
 
 struct DnsResult {
@@ -7,3 +9,5 @@ struct DnsResult {
 };
 
 DnsResult DownloadTest(std::string dns);
+
+#endif
