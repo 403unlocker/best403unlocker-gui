@@ -15,6 +15,7 @@ class requestRecipe(ConanFile):
     def requirements(self):
         self.requires("libcurl/8.9.1")
         self.requires("wxwidgets/3.2.5")
+        self.requires("tomlplusplus/3.4.0")
 
     def layout(self):
         cmake_layout(self)
