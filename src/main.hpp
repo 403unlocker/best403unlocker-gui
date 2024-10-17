@@ -4,8 +4,8 @@
 #include <wx/app.h>
 
 class Unlocker : public wxApp {
-  private:
-   bool OnInit();
+ private:
+  bool OnInit();
 };
 
 #endif
