@@ -1,4 +1,4 @@
-#include "config.hpp"
+#include "config.h"
 
 #include <cstdlib>
 #include <filesystem>
@@ -34,6 +34,7 @@ static std::string GetConfigFilePath() {
   if (!std::filesystem::exists(configFilePath)) {
     std::ofstream output = std::ofstream{configFilePath, std::ios_base::binary};
     if (output.is_open()) {
+      output << "[settings]\n";
       output << "dns = [";
       int dnsListSize = sizeof(DEFAULT_DNS_LIST) / sizeof(DEFAULT_DNS_LIST[0]);
 
@@ -62,9 +63,8 @@ std::string GetUsername() {
 
 std::vector<std::string> GetDNSConfig() {
   std::vector<std::string> result{};
-  std::string configPath = GetConfigFilePath();
-  toml::table configTable = toml::parse_file(configPath);
-  toml::array &tomlDnsList = *configTable.get_as<toml::array>("dns");
+  toml::table configTable = toml::parse_file(GetConfigFilePath());
+  toml::array &tomlDnsList = *configTable["settings"]["dns"].as_array();
 
   for (auto &&data : tomlDnsList) {
     result.push_back(data.value_or<std::string>(""));
@@ -77,5 +77,5 @@ std::string GetTestingURL() {
   std::string configPath = GetConfigFilePath();
   toml::table configTable = toml::parse_file(configPath);
 
-  return configTable["url"].value_or(DEFAULT_DOWNLOAD_URL);
+  return configTable["settings"]["url"].value_or(DEFAULT_DOWNLOAD_URL);
 }
