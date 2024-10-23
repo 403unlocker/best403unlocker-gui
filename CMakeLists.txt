@@ -1,11 +1,19 @@
 cmake_minimum_required(VERSION 3.15)
 project(request CXX)
 
+set(CMAKE_CXX_STANDARD, 20)
+set(CMAKE_CXX_STANDARD_REQUIRED, True)
+
 find_package(CURL REQUIRED)
 find_package(wxWidgets REQUIRED)
 find_package(tomlplusplus REQUIRED)
 
-file(GLOB SRC_FILES src/*.cpp src/**/*.cpp)
+set(SRC_FILES
+  src/main.cpp
+  src/main_frame.cpp
+  src/downloads.cpp
+  src/config.cpp
+)
 
 if(MSVC)
   add_definitions("-DUNICODE")
