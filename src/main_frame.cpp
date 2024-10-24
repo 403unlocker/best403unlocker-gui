@@ -9,7 +9,7 @@
 #include "config.h"
 #include "downloads.h"
 
-MainFrame::MainFrame() : wxFrame{nullptr, wxID_ANY, "Unlocker 403"} {
+MainFrame::MainFrame() : wxFrame{nullptr, wxID_ANY, "Best403Unlocker"} {
   CreateWidgets();
   ConfigureLayout();
   CreateEventBinds();
