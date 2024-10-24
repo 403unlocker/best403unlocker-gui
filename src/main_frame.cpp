@@ -54,7 +54,8 @@ void MainFrame::ConfigureLayout() {
 
 void MainFrame::CreateEventBinds() {
   Bind(wxEVT_CLOSE_WINDOW, &MainFrame::OnWindowClose, this);
-  // Bind(wxEVT_SHOW, &MainFrame::OnShow, this);
+  Bind(wxEVT_SHOW, &MainFrame::OnShow, this);
+  copyBtn->Bind(wxEVT_BUTTON, &MainFrame::OnCopyBtnClick, this);
   testBtn->Bind(wxEVT_BUTTON, &MainFrame::OnTestBtnClick, this);
 }
 
