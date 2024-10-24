@@ -1,6 +1,4 @@
-/* XPM */
-static char *e0f2f63499674c7cce2288dd82c3798aCtlHXcFAM8C4jbIS[] = {
-/* columns rows colors chars-per-pixel */
+static const char *iconImg[] = {
 "48 48 136 2 ",
 "   c #000000",
 ".  c #090906",
