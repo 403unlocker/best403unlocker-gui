@@ -20,6 +20,7 @@ class MainFrame : public wxFrame {
   void OnWindowClose(wxCloseEvent &event);
   void OnShow(wxShowEvent &event);
   void OnTestBtnClick(wxCommandEvent &event);
+  void OnCopyBtnClick(wxCommandEvent &event);
 
   void TriggerDnsFetch();
   void FetchDnsResult();

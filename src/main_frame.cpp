@@ -1,5 +1,6 @@
 #include "main_frame.h"
 
+#include <wx/clipbrd.h>
 #include <wx/wx.h>
 
 #include <thread>
@@ -53,7 +54,7 @@ void MainFrame::ConfigureLayout() {
 
 void MainFrame::CreateEventBinds() {
   Bind(wxEVT_CLOSE_WINDOW, &MainFrame::OnWindowClose, this);
-  //Bind(wxEVT_SHOW, &MainFrame::OnShow, this);
+  // Bind(wxEVT_SHOW, &MainFrame::OnShow, this);
   testBtn->Bind(wxEVT_BUTTON, &MainFrame::OnTestBtnClick, this);
 }
 
@@ -69,6 +70,20 @@ void MainFrame::OnWindowClose(wxCloseEvent &event) {
 void MainFrame::OnShow(wxShowEvent &event) { TriggerDnsFetch(); }
 
 void MainFrame::OnTestBtnClick(wxCommandEvent &event) { TriggerDnsFetch(); }
+
+void MainFrame::OnCopyBtnClick(wxCommandEvent &event) {
+  if (dnsResult.size() == 0) return;
+
+  DnsResult &result = dnsResult[0];
+
+  for (DnsResult &dns : dnsResult)
+    if (dns.downloaded > result.downloaded) result = dns;
+
+  if (wxTheClipboard->Open()) {
+    wxTheClipboard->SetData(new wxTextDataObject(result.dns));
+    wxTheClipboard->Close();
+  }
+}
 
 void MainFrame::TriggerDnsFetch() {
   if (fetchThread != nullptr) return;
