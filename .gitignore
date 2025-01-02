@@ -1,4 +1,7 @@
 build/
 .vscode/
+CMakePresets.json
 CMakeUserPresets.json
 .vs/
+.cache/
+compile_commands.json
